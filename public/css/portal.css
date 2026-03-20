@@ -1,0 +1,76 @@
+/* PORTAL.CSS — dark medieval */
+body { background-image:
+  radial-gradient(ellipse 70% 50% at 20% 10%, rgba(212,144,10,.06) 0,transparent 55%),
+  radial-gradient(ellipse 50% 70% at 80% 90%, rgba(143,31,31,.08) 0,transparent 50%),
+  repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);
+  background-color:var(--stone-800);
+}
+header { text-align:center; padding:3rem 2rem 2rem; position:relative; border-bottom:1px solid var(--stone-600); }
+header::after { content:''; display:block; width:160px; height:1px; background:linear-gradient(90deg,transparent,var(--amber-dim),transparent); margin:1.5rem auto 0; }
+.logo {
+  font-family:'Cinzel', Georgia, serif;
+  font-size:clamp(28px,5.5vw,56px); font-weight:700;
+  color:var(--amber2);
+  text-shadow:0 0 40px rgba(212,144,10,.3), 0 2px 4px rgba(0,0,0,.8);
+  letter-spacing:.06em; line-height:1;
+}
+.logo-sub { font-family:'Cinzel',serif; font-size:10px; color:var(--cream4); letter-spacing:.4em; margin-top:8px; text-transform:uppercase; }
+.tagline  { font-size:15px; color:var(--cream3); margin-top:12px; font-style:italic; }
+.star-row { color:var(--amber-dim); font-size:13px; letter-spacing:10px; margin-bottom:.8rem; opacity:.7; }
+main { max-width:1100px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+
+.cta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:2.5rem; }
+.cta-card {
+  background:var(--stone-750); border:1px solid var(--stone-600);
+  padding:28px 22px; cursor:pointer; text-decoration:none; display:block;
+  transition:all .2s; position:relative; overflow:hidden;
+}
+.cta-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent,rgba(212,144,10,.04)); opacity:0; transition:.2s; pointer-events:none; }
+.cta-card:hover  { border-color:var(--amber-dim); transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.5); }
+.cta-card:hover::after { opacity:1; }
+.cta-icon  { font-size:36px; margin-bottom:12px; display:block; }
+.cta-title { font-family:'Cinzel',serif; font-size:16px; color:var(--amber2); font-weight:700; margin-bottom:8px; }
+.cta-desc  { font-size:13px; color:var(--cream3); line-height:1.65; }
+.cta-badge { position:absolute; top:10px; right:10px; background:var(--scarlet); border:1px solid var(--scarlet2); font-family:'Cinzel',serif; font-size:9px; color:var(--cream); padding:3px 8px; }
+
+.chars-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; margin-bottom:2.5rem; }
+.char-card  { background:var(--stone-750); border:1px solid var(--stone-600); padding:14px; cursor:pointer; transition:all .2s; position:relative; }
+.char-card:hover           { border-color:var(--amber-dim); background:var(--stone-700); }
+.char-card .cc-name        { font-family:'Cinzel',serif; font-size:13px; color:var(--amber2); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.char-card .cc-sub         { font-size:12px; color:var(--cream3); margin-top:4px; }
+.char-card .cc-level       { font-size:11px; color:var(--cream4); margin-top:5px; }
+.char-card .cc-del         { position:absolute;top:8px;right:8px;background:none;border:none;color:var(--cream4);cursor:pointer;font-size:13px;opacity:0;transition:.15s; }
+.char-card:hover .cc-del   { opacity:1; }
+.char-card .cc-del:hover    { color:var(--scarlet3); }
+.char-card.new-card { border-style:dashed; display:flex; align-items:center; justify-content:center; min-height:92px; color:var(--cream4); font-family:'Cinzel',serif; font-size:11px; letter-spacing:.1em; flex-direction:column; gap:6px; }
+.char-card.new-card:hover  { color:var(--amber2); border-color:var(--amber-dim); }
+.new-plus { font-size:22px; opacity:.4; }
+
+.camps-list { display:flex; flex-direction:column; gap:8px; margin-bottom:2.5rem; }
+.camp-card  { background:var(--stone-750); border:1px solid var(--stone-600); display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; padding:14px 16px; cursor:pointer; transition:all .2s; }
+.camp-card:hover             { border-color:var(--amber-dim); }
+.camp-act-badge              { background:var(--scarlet); border:1px solid var(--scarlet2); font-family:'Cinzel',serif; font-size:9px; color:var(--cream); padding:6px 10px; text-align:center; min-width:60px; }
+.camp-act-badge span         { display:block; font-size:17px; }
+.camp-info .ci-title         { font-family:'Cinzel',serif; font-size:14px; color:var(--amber2); }
+.camp-info .ci-char          { font-size:12px; color:var(--cream3); margin-top:3px; }
+.camp-info .ci-date          { font-size:11px; color:var(--cream4); margin-top:2px; }
+.camp-arrow                  { color:var(--stone-400); font-size:20px; }
+.empty-msg                   { color:var(--cream4); font-size:13px; font-style:italic; padding:8px 0; }
+
+.dice-section { background:var(--stone-750); border:1px solid var(--stone-600); padding:20px 18px; }
+.dice-row     { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.die-btn      { background:var(--stone-700); border:1px solid var(--stone-600); color:var(--cream3); padding:7px 14px; font-family:'Cinzel',serif; font-size:11px; cursor:pointer; transition:all .15s; letter-spacing:.04em; }
+.die-btn:hover        { border-color:var(--amber-dim); color:var(--cream); }
+.roll-result          { margin-top:14px; font-family:'Cinzel', Georgia, serif; font-size:26px; color:var(--amber2); min-height:38px; text-shadow:0 0 20px rgba(232,172,42,.35); transition:all .15s; }
+.roll-sub             { font-size:12px; color:var(--cream4); margin-top:4px; font-style:italic; }
+
+#modal { display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.85); align-items:center; justify-content:center; padding:2rem; }
+#modal.show { display:flex; }
+.modal-box   { background:var(--stone-750); border:1px solid var(--stone-500); width:min(420px,92vw); padding:26px; box-shadow:0 8px 32px rgba(0,0,0,.8); }
+.modal-title { font-family:'Cinzel',serif; font-size:15px; color:var(--amber2); margin-bottom:16px; }
+.modal-label { font-family:'Cinzel',serif; font-size:9px; color:var(--cream3); letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; display:block; }
+.modal-p     { font-size:14px; color:var(--cream3); line-height:1.65; margin-bottom:14px; }
+.modal-select { width:100%; background:var(--stone-900); border:1px solid var(--stone-500); color:var(--cream); padding:8px 10px; font-family: Verdana, Geneva, sans-serif; font-size:14px; outline:none; margin-bottom:12px; }
+.modal-select:focus { border-color:var(--amber-dim); }
+.modal-select option { background:var(--stone-800); }
+.btn-row { display:flex; gap:8px; }

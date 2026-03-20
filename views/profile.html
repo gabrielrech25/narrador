@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perfil — Portal RPG</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/public/css/base.css">
+<style>
+nav {
+  background:var(--stone-900); border-bottom:1px solid var(--stone-600);
+  padding:10px 20px; display:flex; align-items:center; justify-content:space-between;
+  box-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+.nav-logo { font-family:'Cinzel',serif; font-size:13px; color:var(--amber2); text-decoration:none; }
+.nav-btn  {
+  background:var(--stone-700); border:1px solid var(--stone-600); color:var(--cream3);
+  padding:5px 14px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:.08em;
+  cursor:pointer; transition:.15s; text-decoration:none; display:inline-block;
+}
+.nav-btn:hover { border-color:var(--amber-dim); color:var(--cream); }
+
+main { max-width:600px; margin:0 auto; padding:2rem 1.5rem; }
+.page-title {
+  font-family:'Cinzel', Georgia, serif; font-size:22px; color:var(--amber2);
+  margin-bottom:1.5rem; padding-bottom:12px;
+  border-bottom:1px solid var(--stone-600);
+}
+
+.user-badge {
+  background:var(--stone-750); border:1px solid var(--stone-600);
+  padding:20px; margin-bottom:20px; display:flex; align-items:center; gap:16px;
+}
+.avatar {
+  width:56px; height:56px; background:var(--midnight2);
+  border:2px solid var(--midnight3);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:22px; color:var(--midnight4); flex-shrink:0;
+}
+.user-info .u-name    { font-family:'Cinzel',serif; font-size:16px; color:var(--amber2); font-weight:700; }
+.user-info .u-username { font-size:13px; color:var(--cream3); margin-top:3px; }
+.user-info .u-since    { font-size:11px; color:var(--cream4); margin-top:4px; font-style:italic; }
+
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.stat-tile {
+  background:var(--stone-750); border:1px solid var(--stone-600);
+  padding:14px; text-align:center;
+}
+.stat-tile .sv { font-family:'Cinzel', Georgia, serif; font-size:26px; color:var(--amber2); }
+.stat-tile .sl { font-family:'Cinzel',serif; font-size:9px; color:var(--cream4); letter-spacing:.1em; margin-top:4px; }
+
+.form-section { background:var(--stone-750); border:1px solid var(--stone-600); padding:20px; margin-bottom:16px; }
+.form-section h3 { font-family:'Cinzel',serif; font-size:11px; color:var(--cream3); letter-spacing:.14em; margin-bottom:14px; border-bottom:1px solid var(--stone-600); padding-bottom:8px; }
+
+.f { margin-bottom:14px; }
+.f label { display:block; font-family:'Cinzel',serif; font-size:9px; color:var(--cream4); letter-spacing:.14em; text-transform:uppercase; margin-bottom:5px; }
+.f input {
+  width:100%; background:var(--stone-900); border:1px solid var(--stone-600);
+  color:var(--cream); padding:10px 12px; font-family: Verdana, Geneva, sans-serif; font-size:15px; outline:none; transition:.2s;
+}
+.f input:focus { border-color:var(--amber-dim); box-shadow:0 0 0 2px rgba(212,144,10,.15); }
+
+.msg { font-size:13px; padding:9px 12px; margin-bottom:12px; border-left:3px solid; display:none; }
+.msg.show { display:block; }
+.msg.err  { background:rgba(143,31,31,.15); border-color:var(--scarlet2); color:var(--scarlet3); }
+.msg.ok   { background:rgba(46,96,64,.15);  border-color:var(--moss2);   color:var(--moss3); }
+
+.danger-zone { background:rgba(143,31,31,.06); border:1px solid var(--scarlet); padding:16px; margin-top:20px; }
+.danger-zone h3 { font-family:'Cinzel',serif; font-size:11px; color:var(--scarlet2); letter-spacing:.14em; margin-bottom:10px; }
+.btn-danger {
+  padding:9px 20px; background:transparent; border:1px solid var(--scarlet);
+  color:var(--scarlet3); font-family:'Cinzel',serif; font-size:11px; cursor:pointer; transition:.18s;
+}
+.btn-danger:hover { background:rgba(143,31,31,.15); border-color:var(--scarlet2); }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/">← Portal RPG</a>
+  <div style="display:flex;gap:8px">
+    <a class="nav-btn" href="/sheet.html" style="text-decoration:none">Nova Ficha</a>
+    <button class="nav-btn" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<main>
+  <div class="page-title">⚙ Perfil &amp; Configurações</div>
+
+  <div class="user-badge" id="user-badge">
+    <div class="avatar" id="avatar">?</div>
+    <div class="user-info">
+      <div class="u-name"    id="u-name">Carregando...</div>
+      <div class="u-username" id="u-username"></div>
+      <div class="u-since"   id="u-since"></div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-tile"><div class="sv" id="stat-chars">—</div><div class="sl">FICHAS</div></div>
+    <div class="stat-tile"><div class="sv" id="stat-camps">—</div><div class="sl">AVENTURAS</div></div>
+    <div class="stat-tile"><div class="sv" id="stat-days">—</div><div class="sl">DIAS ATIVO</div></div>
+  </div>
+
+  <!-- Change display name -->
+  <div class="form-section">
+    <h3>ALTERAR NOME DE EXIBIÇÃO</h3>
+    <div class="msg err" id="name-err"></div>
+    <div class="msg ok"  id="name-ok"></div>
+    <div class="f">
+      <label>Novo Nome</label>
+      <input type="text" id="new-name" maxlength="40" placeholder="Seu nome de exibição">
+    </div>
+    <button class="btn-primary" onclick="changeName()">Salvar Nome</button>
+  </div>
+
+  <!-- Change password -->
+  <div class="form-section">
+    <h3>ALTERAR SENHA</h3>
+    <div class="msg err" id="pw-err"></div>
+    <div class="msg ok"  id="pw-ok"></div>
+    <div class="f"><label>Senha Atual</label><input type="password" id="old-pw" placeholder="••••••••"></div>
+    <div class="f"><label>Nova Senha</label><input type="password" id="new-pw" placeholder="Mínimo 6 caracteres"></div>
+    <div class="f"><label>Confirmar Nova Senha</label><input type="password" id="new-pw2" placeholder="••••••••"></div>
+    <button class="btn-primary" onclick="changePw()">Alterar Senha</button>
+  </div>
+
+  <div class="danger-zone">
+    <h3>ZONA DE PERIGO</h3>
+    <p style="font-size:13px;color:var(--cream4);margin-bottom:12px">
+      Fazer logout encerra sua sessão atual em todos os dispositivos.
+    </p>
+    <button class="btn-danger" onclick="logout()">Encerrar Sessão</button>
+  </div>
+</main>
+
+<script>
+// ── AUTH GUARD ──
+const SESSION_ID = localStorage.getItem('rpg_session');
+if (!SESSION_ID) { location.href = '/login.html'; throw new Error('not authed'); }
+const CURRENT_USER = JSON.parse(localStorage.getItem('rpg_user') || 'null');
+function authHeaders() { return {'Content-Type':'application/json','x-session-id':SESSION_ID}; }
+function logout() {
+  fetch('/api/auth/logout',{method:'POST',headers:authHeaders()});
+  localStorage.removeItem('rpg_session'); localStorage.removeItem('rpg_user');
+  location.href='/login.html';
+}
+
+// ── LOAD ──
+async function loadProfile() {
+  const [me, chars, camps] = await Promise.all([
+    fetch('/api/auth/me', {headers:authHeaders()}).then(r=>r.json()),
+    fetch('/api/characters', {headers:authHeaders()}).then(r=>r.json()),
+    fetch('/api/campaigns',  {headers:authHeaders()}).then(r=>r.json()),
+  ]);
+  if (me.error) { location.href='/login.html'; return; }
+
+  const u = me.user;
+  document.getElementById('avatar').textContent    = u.displayName[0].toUpperCase();
+  document.getElementById('u-name').textContent    = u.displayName;
+  document.getElementById('u-username').textContent= '@' + u.username;
+  document.getElementById('u-since').textContent   = 'Membro desde ' + new Date(u.createdAt * 1000).toLocaleDateString('pt-BR');
+  document.getElementById('new-name').value        = u.displayName;
+
+  document.getElementById('stat-chars').textContent = chars.characters?.length || 0;
+  document.getElementById('stat-camps').textContent = camps.campaigns?.length  || 0;
+
+  const days = Math.floor((Date.now()/1000 - u.createdAt) / 86400);
+  document.getElementById('stat-days').textContent = days || 1;
+}
+
+// ── CHANGE NAME ──
+async function changeName() {
+  const name = document.getElementById('new-name').value.trim();
+  clearMsgs('name');
+  if (!name || name.length < 2) { showMsg('name','err','Nome deve ter ao menos 2 caracteres.'); return; }
+
+  // Use PUT /api/auth/display-name
+  const r = await fetch('/api/auth/display-name', {
+    method:'POST', headers:authHeaders(),
+    body: JSON.stringify({displayName: name})
+  }).then(x=>x.json());
+
+  if (r.error) { showMsg('name','err',r.error); return; }
+  showMsg('name','ok','Nome alterado com sucesso!');
+  document.getElementById('u-name').textContent = name;
+  // Update local storage
+  if (CURRENT_USER) { CURRENT_USER.displayName = name; localStorage.setItem('rpg_user', JSON.stringify(CURRENT_USER)); }
+  setTimeout(() => loadProfile(), 500);
+}
+
+// ── CHANGE PASSWORD ──
+async function changePw() {
+  const op = document.getElementById('old-pw').value;
+  const np = document.getElementById('new-pw').value;
+  const np2= document.getElementById('new-pw2').value;
+  clearMsgs('pw');
+  if (!op||!np) { showMsg('pw','err','Preencha todos os campos.'); return; }
+  if (np !== np2) { showMsg('pw','err','As senhas não coincidem.'); return; }
+  if (np.length < 6) { showMsg('pw','err','Nova senha deve ter ≥ 6 caracteres.'); return; }
+
+  const r = await fetch('/api/auth/change-password', {
+    method:'POST', headers:authHeaders(),
+    body: JSON.stringify({oldPassword:op, newPassword:np})
+  }).then(x=>x.json());
+
+  if (r.error) { showMsg('pw','err',r.error); return; }
+  showMsg('pw','ok','Senha alterada com sucesso!');
+  document.getElementById('old-pw').value='';
+  document.getElementById('new-pw').value='';
+  document.getElementById('new-pw2').value='';
+}
+
+function showMsg(prefix, type, msg) {
+  const el = document.getElementById(`${prefix}-${type}`);
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+}
+function clearMsgs(prefix) {
+  ['err','ok'].forEach(t => {
+    const el = document.getElementById(`${prefix}-${t}`);
+    if (el) el.classList.remove('show');
+  });
+}
+
+loadProfile();
+</script>
+</body>
+</html>

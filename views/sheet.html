@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ficha D&D 5e — Portal RPG</title>
+
+<link rel="stylesheet" href="/public/css/base.css">
+<link rel="stylesheet" href="/public/css/sheet.css">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Portal RPG</a>
+  <div class="nav-center" id="nav-name">Carregando...</div>
+  <div class="nav-right">
+    <span class="save-st" id="save-st"></span>
+    <button class="nav-btn" onclick="levelUp()">↑ Nível</button>
+    <button class="nav-btn prim" onclick="save()">Salvar ✓</button>
+    <button class="nav-btn" onclick="logout()" style="margin-left:6px">Sair</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('basics',this)">Básico</div>
+  <div class="tab" onclick="showTab('combat',this)">Combate</div>
+  <div class="tab" onclick="showTab('skills',this)">Perícias</div>
+  <div class="tab" onclick="showTab('spells',this)">Magias</div>
+  <div class="tab" onclick="showTab('features',this)">Habilidades</div>
+  <div class="tab" onclick="showTab('inventory',this)">Inventário</div>
+  <div class="tab" onclick="showTab('notes',this)">Notas</div>
+</div>
+
+<!-- ══ BASICS ══════════════════════════════════════════ -->
+<div class="page active" id="page-basics">
+  <div class="g g2">
+    <div class="sec">
+      <div class="sec-title">Identidade</div>
+      <div class="g g2">
+        <div class="field"><label>Nome</label><input id="f-name" oninput="setF('name',this.value)"></div>
+        <div class="field"><label>Jogador</label><input id="f-player" oninput="setF('player',this.value)"></div>
+        <div class="field"><label>Alinhamento</label>
+          <select id="f-align" onchange="setF('alignment',this.value)">
+            <option value="">— Escolha —</option>
+            <option>Leal e Bom</option><option>Neutro e Bom</option><option>Caótico e Bom</option>
+            <option>Leal e Neutro</option><option>Neutro</option><option>Caótico e Neutro</option>
+            <option>Leal e Mau</option><option>Neutro e Mau</option><option>Caótico e Mau</option>
+          </select>
+        </div>
+        <div class="field"><label>Background</label>
+          <select id="f-bg" onchange="selectBg(this.value)">
+            <option value="">— Escolha —</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">Nível &amp; Experiência</div>
+      <div class="g g3">
+        <div class="field"><label>Nível</label><input id="f-level" type="number" min="1" max="20" oninput="setLevel(+this.value)"></div>
+        <div class="field"><label>XP Atual</label><input id="f-xp" type="number" oninput="setF('xp',+this.value);updateXpBar()"></div>
+        <div class="field"><label>Próximo nível</label><input id="f-xpnext" readonly style="color:var(--cream4)"></div>
+      </div>
+      <div style="margin-top:8px;height:6px;background:var(--bg);border:1px solid var(--stone-600);overflow:hidden">
+        <div id="xp-bar" style="height:100%;background:linear-gradient(90deg,var(--midnight2),var(--amber));transition:width .3s"></div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--cream4)" id="prof-disp"></div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Raça</div>
+    <div class="pick-grid pick-g4" id="race-grid"></div>
+    <div id="race-info" style="margin-top:12px"></div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Classe</div>
+    <div class="pick-grid pick-g3" id="class-grid"></div>
+    <div id="class-info" style="margin-top:12px"></div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Atributos</div>
+    <div class="abil-grid" id="abil-grid"></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--cream4)">
+      Clique nos modificadores de SAL para ativar/desativar proficiência em salvaguardas.
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Aparência &amp; Personalidade</div>
+    <div class="g g3" style="margin-bottom:10px">
+      <div class="field"><label>Idade</label><input id="f-age" oninput="setF('age',this.value)"></div>
+      <div class="field"><label>Altura</label><input id="f-height" oninput="setF('height',this.value)"></div>
+      <div class="field"><label>Olhos / Cabelo</label><input id="f-eyes" oninput="setF('eyes',this.value)"></div>
+    </div>
+    <div class="g g2">
+      <div class="field"><label>Traços de Personalidade</label><textarea id="f-traits" rows="2" oninput="setF('personalityTraits',this.value)"></textarea></div>
+      <div class="field"><label>Ideais</label><textarea id="f-ideals" rows="2" oninput="setF('ideals',this.value)"></textarea></div>
+      <div class="field"><label>Laços</label><textarea id="f-bonds" rows="2" oninput="setF('bonds',this.value)"></textarea></div>
+      <div class="field"><label>Fraquezas</label><textarea id="f-flaws" rows="2" oninput="setF('flaws',this.value)"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMBAT ══════════════════════════════════════════ -->
+<div class="page" id="page-combat">
+  <div class="g g2">
+    <div class="sec">
+      <div class="sec-title">Estatísticas de Combate</div>
+      <div class="g g4">
+        <div class="stat-box"><label>CA</label><input id="c-ac" type="number" oninput="setF('ac',+this.value)"></div>
+        <div class="stat-box"><label>Iniciativa</label><div class="stat-val" id="c-init">+0</div></div>
+        <div class="stat-box"><label>Velocidade</label><input id="c-speed" type="number" oninput="setF('speed',+this.value)"></div>
+        <div class="stat-box"><label>Prof. Bônus</label><div class="stat-val" id="c-prof">+2</div></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">Inspiração &amp; Condições</div>
+      <div class="g g2">
+        <div class="insp-box" id="insp-box" onclick="toggleInsp()">
+          <span class="insp-star" id="insp-star">☆</span>
+          <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--cream4);margin-top:3px">INSPIRAÇÃO</div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--cream4);margin-bottom:5px">
+            EXAUSTÃO <span id="exh-val" style="color:var(--amber2)">0</span>/6
+          </div>
+          <div style="display:flex;gap:4px">
+            <button class="btn-ghost" style="padding:3px 10px" onclick="chgExh(-1)">−</button>
+            <button class="btn-ghost" style="padding:3px 10px" onclick="chgExh(1)">+</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="label-xs" style="margin-bottom:5px">CONDIÇÕES</div>
+        <div class="cond-grid" id="cond-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Pontos de Vida</div>
+    <div class="hp-grid">
+      <div class="hp-box"><label>PV Máximo</label><input class="hp-inp" id="hp-max" type="number" oninput="setF('maxHp',+this.value);updateHpBar()"></div>
+      <div class="hp-box">
+        <label>PV Atual</label>
+        <input class="hp-inp" id="hp-cur" type="number" oninput="setF('currentHp',+this.value);updateHpBar()">
+        <div class="hp-bar-wrap"><div class="hp-bar" id="hp-bar"></div></div>
+      </div>
+      <div class="hp-box"><label>PV Temporários</label><input class="hp-inp" id="hp-tmp" type="number" oninput="setF('tempHp',+this.value)"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <span class="label-xs">DADO DE VIDA: <span id="hitdie-disp" style="color:var(--amber2)"></span></span>
+      <span class="label-xs">USADOS:
+        <input id="hd-used" type="number" min="0" style="width:38px;background:var(--stone-700);border:1px solid var(--stone-600);color:var(--cream);text-align:center;padding:2px;outline:none" oninput="setF('hitDiceUsed',+this.value)">
+      </span>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Resistências de Morte</div>
+    <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+      <div>
+        <div class="label-xs" style="color:var(--green2);margin-bottom:4px">SUCESSOS</div>
+        <div class="ds-pips" id="ds-succ"></div>
+      </div>
+      <div>
+        <div class="label-xs" style="color:var(--red2);margin-bottom:4px">FALHAS</div>
+        <div class="ds-pips" id="ds-fail"></div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:6px;align-items:flex-end">
+        <button class="btn-ghost" style="padding:7px 14px;font-size:9px" onclick="doRest('short')">Desc. Curto</button>
+        <button class="btn-primary" style="padding:7px 14px" onclick="doRest('long')">Desc. Longo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Salvaguardas de Atributo</div>
+    <div class="g g6" id="saves-grid"></div>
+  </div>
+
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Ajuste Rápido de PV &amp; Dados</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+      <div>
+        <div class="label-xs" style="margin-bottom:4px">DANO / CURA</div>
+        <div style="display:flex;gap:5px;align-items:center">
+          <input id="hp-adj" type="number" min="1" placeholder="0"
+            style="width:64px;background:var(--stone-900);border:1px solid var(--stone-600);
+            color:var(--cream);padding:7px 8px;font-family:'Cinzel',serif;font-size:15px;
+            text-align:center;outline:none;">
+          <button onclick="adjustHP(-1)" style="background:var(--scarlet);border:1px solid var(--scarlet2);
+            color:var(--cream);padding:7px 16px;font-family:'Cinzel',serif;font-size:11px;
+            cursor:pointer;letter-spacing:.06em" title="Aplicar dano">Dano</button>
+          <button onclick="adjustHP(1)" style="background:var(--moss);border:1px solid var(--moss2);
+            color:var(--cream);padding:7px 16px;font-family:'Cinzel',serif;font-size:11px;
+            cursor:pointer;letter-spacing:.06em" title="Curar">Cura</button>
+        </div>
+      </div>
+      <div style="margin-left:12px">
+        <div class="label-xs" style="margin-bottom:4px">ROLAR DADO</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <button class="dice-roll-btn" onclick="rollDie(4)">d4</button>
+          <button class="dice-roll-btn" onclick="rollDie(6)">d6</button>
+          <button class="dice-roll-btn" onclick="rollDie(8)">d8</button>
+          <button class="dice-roll-btn" onclick="rollDie(10)">d10</button>
+          <button class="dice-roll-btn" onclick="rollDie(12)">d12</button>
+          <button class="dice-roll-btn" onclick="rollDie(20)">d20</button>
+          <button class="dice-roll-btn" onclick="rollDie(100)">d%</button>
+        </div>
+      </div>
+      <div id="dice-result" style="font-family:'Cinzel',serif;font-size:24px;color:var(--amber2);
+        min-width:60px;text-align:center;text-shadow:0 0 12px rgba(212,144,10,.3);
+        transition:transform .15s;margin-left:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SKILLS ══════════════════════════════════════════ -->
+<div class="page" id="page-skills">
+  <div class="g g2">
+    <div class="sec">
+      <div class="sec-title">Perícias — Clique: sem prof → prof → expertise</div>
+      <div class="skill-grid" id="skill-grid"></div>
+      <div style="margin-top:12px">
+        <div class="label-xs" style="margin-bottom:4px">PERCEPÇÃO PASSIVA</div>
+        <div style="font-size:26px;color:var(--amber2);font-family:'Cinzel',serif;font-weight:700" id="pass-perc">10</div>
+      </div>
+    </div>
+    <div>
+      <div class="sec" style="margin-bottom:10px">
+        <div class="sec-title">Proficiências</div>
+        <div class="label-xs" style="margin-bottom:4px">ARMADURAS</div>
+        <div id="armor-profs" style="margin-bottom:8px"></div>
+        <div class="label-xs" style="margin-bottom:4px">ARMAS</div>
+        <div id="weapon-profs" style="margin-bottom:8px"></div>
+        <div class="label-xs" style="margin-bottom:4px">IDIOMAS</div>
+        <div id="lang-profs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SPELLS ══════════════════════════════════════════ -->
+<div class="page" id="page-spells">
+  <div id="no-spell-msg" style="padding:20px;color:var(--cream4);font-style:italic">Esta classe não possui conjuração mágica.</div>
+  <div id="spell-content" style="display:none">
+    <div class="g g2" style="margin-bottom:12px">
+      <div class="sec">
+        <div class="sec-title">Estatísticas de Conjuração</div>
+        <div class="g g3">
+          <div class="stat-box"><label>Atributo</label><div class="stat-val" id="sp-abl" style="font-size:16px"></div></div>
+          <div class="stat-box"><label>CD de Magia</label><div class="stat-val" id="sp-dc"></div></div>
+          <div class="stat-box"><label>Bônus Ataque</label><div class="stat-val" id="sp-atk"></div></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Descanso</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost" style="flex:1;font-size:9px" onclick="doRest('short')">Descanso Curto</button>
+          <button class="btn-primary" style="flex:1" onclick="doRest('long')">Descanso Longo</button>
+        </div>
+        <div style="font-size:11px;color:var(--cream4);margin-top:8px">Longo restaura todos os espaços e HP.</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Espaços de Magia — Clique para usar / restaurar</div>
+      <div class="slots-grid" id="slots-grid"></div>
+    </div>
+
+    <div class="sec" style="margin-top:12px">
+      <div class="sec-title">Magias da Classe</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+        <input id="spell-search" placeholder="🔍�� Buscar magia..." oninput="filterSpells()"
+          style="flex:1;min-width:160px;background:var(--stone-900);border:1px solid var(--stone-600);
+          color:var(--cream);padding:7px 10px;font-family: Verdana, Geneva, sans-serif;font-size:13px;outline:none;">
+        <select id="spell-lvl-filter" onchange="filterSpells()"
+          style="background:var(--stone-900);border:1px solid var(--stone-600);color:var(--cream3);
+          padding:7px 10px;font-family:'Cinzel',serif;font-size:9px;outline:none;letter-spacing:.06em;">
+          <option value="">Todos os Níveis</option>
+          <option value="0">Truques</option>
+          <option value="1">Nível 1</option><option value="2">Nível 2</option>
+          <option value="3">Nível 3</option><option value="4">Nível 4</option>
+          <option value="5">Nível 5</option><option value="6">Nível 6</option>
+          <option value="7">Nível 7</option><option value="8">Nível 8</option>
+          <option value="9">Nível 9</option>
+        </select>
+        <select id="spell-state-filter" onchange="filterSpells()"
+          style="background:var(--stone-900);border:1px solid var(--stone-600);color:var(--cream3);
+          padding:7px 10px;font-family:'Cinzel',serif;font-size:9px;outline:none;letter-spacing:.06em;">
+          <option value="">Todas</option>
+          <option value="prepared">Preparadas</option>
+          <option value="known">Conhecidas</option>
+          <option value="none">Não aprendidas</option>
+        </select>
+      </div>
+      <div style="font-size:11px;color:var(--cream4);margin-bottom:8px">
+        ☐ = disponível · ◇ = conhecida · ★ = preparada · Truques são ilimitados
+      </div>
+      <div id="spell-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEATURES ═════════════════════════════════════════ -->
+<div class="page" id="page-features">
+  <div class="g g2">
+    <div class="sec">
+      <div class="sec-title">Habilidades Desbloqueadas até o Nível Atual</div>
+      <div id="feat-list"><div style="color:var(--cream4);font-size:12px">Selecione uma classe para ver as habilidades.</div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">Tabela da Classe</div>
+      <div id="cls-table-wrap" style="overflow-x:auto"></div>
+    </div>
+  </div>
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title">Habilidades Raciais</div>
+    <div id="race-traits-feat"><div style="color:var(--cream4);font-size:12px">Selecione uma raça.</div></div>
+  </div>
+</div>
+
+<!-- ══ INVENTORY ════════════════════════════════════════ -->
+<div class="page" id="page-inventory">
+  <div class="g g2" style="margin-bottom:12px">
+    <div class="sec">
+      <div class="sec-title">Moedas</div>
+      <div class="money-grid">
+        <div class="money-box"><label>Ouro (po)</label><input id="gold"   type="number" min="0" oninput="setF('gold',+this.value)"></div>
+        <div class="money-box"><label>Prata (pp)</label><input id="silver" type="number" min="0" oninput="setF('silver',+this.value)"></div>
+        <div class="money-box"><label>Cobre (pc)</label><input id="copper" type="number" min="0" oninput="setF('copper',+this.value)"></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-title">Carga</div>
+      <div style="font-size:24px;color:var(--amber2);font-family:'Cinzel',serif;font-weight:700" id="carry-weight">0 kg</div>
+      <div style="font-size:11px;color:var(--cream4);margin-top:4px">Cap: <span id="carry-cap">0</span> kg (FOR × 7,5)</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-title">Itens &amp; Equipamentos</div>
+    <table class="inv-table">
+      <thead><tr><th>Item</th><th>Tipo</th><th>Peso</th><th>Notas</th><th></th></tr></thead>
+      <tbody id="inv-body"></tbody>
+    </table>
+    <div class="add-row">
+      <input id="ai-name"  placeholder="Nome do item..." style="flex:2">
+      <input id="ai-type"  placeholder="Tipo..."         style="max-width:90px">
+      <input id="ai-wt"    type="number" placeholder="kg" style="max-width:55px">
+      <input id="ai-note"  placeholder="Notas..."        style="flex:2">
+      <button onclick="addItem()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTES ════════════════════════════════════════════ -->
+<div class="page" id="page-notes">
+  <div class="g g2">
+    <div class="sec">
+      <div class="sec-title">Histórico &amp; Origem</div>
+      <textarea class="notes-area" id="f-backstory" rows="7" oninput="setF('backstory',this.value)"
+        placeholder="De onde você vem? O que o motivou a se tornar um aventureiro? Quais são seus maiores medos e sonhos?"></textarea>
+    </div>
+    <div class="sec">
+      <div class="sec-title">Referência Rápida</div>
+      <div id="quick-ref" style="font-size:12px;color:var(--cream3);line-height:1.8"></div>
+    </div>
+  </div>
+  <div class="sec" style="margin-top:12px">
+    <div class="sec-title" style="display:flex;justify-content:space-between;align-items:center">
+      Diário de Sessão
+      <button onclick="addSessionEntry()" style="background:var(--stone-700);border:1px solid var(--stone-600);
+        color:var(--cream3);padding:3px 10px;font-family:'Cinzel',serif;font-size:9px;cursor:pointer;
+        letter-spacing:.06em">+ Entrada</button>
+    </div>
+    <textarea class="notes-area" id="f-notes" rows="12" oninput="setF('notes',this.value)"
+      placeholder="NPCs conhecidos · Pistas descobertas · Missões ativas · Segredos..."></textarea>
+  </div>
+</div>
+
+<!-- ══ SPELL DETAIL MODAL ══════════════════════════════ -->
+<div id="spell-modal">
+  <div class="sm-box">
+    <button class="sm-close" onclick="closeSM()">Fechar ✕</button>
+    <div class="sm-title" id="sm-title"></div>
+    <div class="sm-meta"  id="sm-meta"></div>
+    <div class="sm-desc"  id="sm-desc"></div>
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button id="sm-use" class="btn-primary" style="font-size:10px" onclick="useSMSpell()">Usar Magia</button>
+      <button class="btn-ghost" style="font-size:10px" onclick="closeSM()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script src="/public/js/sheet.js"></script>
+</body>
+</html>

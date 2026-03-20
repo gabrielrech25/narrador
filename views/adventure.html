@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aventura — Waterdeep</title>
+
+<link rel="stylesheet" href="/public/css/base.css">
+<link rel="stylesheet" href="/public/css/adventure.css">
+</head>
+<body style="display:flex;flex-direction:column">
+
+<nav>
+  <a class="nav-logo" href="/">← Portal RPG</a>
+  <div class="act-indicator" id="act-indicator"></div>
+  <div class="nav-stats">
+    <div class="stat-chip" id="stat-hp">HP <span id="nav-hp">—</span></div>
+    <div class="stat-chip">CA <span id="nav-ac">—</span></div>
+    <div class="stat-chip">Dia <span id="nav-day">1</span></div>
+    <button class="nav-btn" onclick="deleteCamp()">✕ Abandonar</button>
+    <button class="nav-btn" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- LEFT: char panel -->
+  <div class="char-panel">
+    <div class="cp-section">
+      <div class="cp-name" id="cp-name">—</div>
+      <div class="cp-sub"  id="cp-sub">—</div>
+      <div class="cp-loc"  id="cp-loc">📍�� —</div>
+    </div>
+
+    <div class="cp-section">
+      <div class="cp-title">Pontos de Vida</div>
+      <div class="hp-row">
+        <div class="hp-label">HP</div>
+        <div class="hp-val" id="cp-hp">—</div>
+      </div>
+      <div class="hp-wrap"><div class="hp-fill" id="cp-hp-bar"></div></div>
+    </div>
+
+    <div class="cp-section">
+      <div class="cp-title">Atributos</div>
+      <div class="stats-grid" id="cp-stats"></div>
+    </div>
+
+    <div class="cp-section">
+      <div class="cp-title">Espaços de Magia</div>
+      <div id="cp-slots"><div style="font-size:11px;color:var(--cream4)">Sem conjuração</div></div>
+    </div>
+
+    <div class="spell-use-section" id="spell-use-section" style="display:none">
+      <div class="spell-use-title">USAR ESPAÇO DE MAGIA</div>
+      <div id="slot-btns"></div>
+    </div>
+
+    <div class="rest-section">
+      <div class="cp-title" style="margin-bottom:6px">Descanso</div>
+      <button class="rest-btn"      onclick="sendRest('short')">Descanso Curto</button>
+      <button class="rest-btn long" onclick="sendRest('long')">Descanso Longo ☽</button>
+    </div>
+  </div>
+
+  <!-- CENTER: narrative -->
+  <div class="narrative-panel">
+    <div class="story-header">
+      <div class="story-title" id="story-title">Sombras sobre Waterdeep</div>
+      <div class="story-act"   id="story-act">Carregando...</div>
+    </div>
+    <div id="chat-log"></div>
+    <div class="input-area">
+      <div class="input-row">
+        <input id="action-input"
+          placeholder="O que você faz? Escreva livremente ou clique em uma opção acima..."
+          maxlength="400">
+        <button id="send-btn" onclick="sendAction()">Enviar →</button>
+      </div>
+      <div class="typing-indicator" id="typing"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: summary panel -->
+  <div class="summary-panel">
+    <div class="sp-section">
+      <div class="sp-title">ARCO DA HISTÓRIA</div>
+      <div class="story-progress" id="story-progress"></div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-title">HISTÓRICO RESUMIDO</div>
+      <div class="sp-text" id="sp-summary">
+        <span class="sp-empty">Sua história ainda está começando...</span>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-title">LOCAL ATUAL</div>
+      <div class="sp-text" id="sp-location">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/public/js/adventure.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal RPG — D&D 5e</title>
+
+<link rel="stylesheet" href="/public/css/base.css">
+<link rel="stylesheet" href="/public/css/portal.css">
+</head>
+<body>
+
+<header style="position:relative">
+  <div id="user-nav" style="position:absolute;top:16px;right:20px;display:flex;gap:10px;align-items:center;"></div>
+  <div class="star-row">✦ ✦ ✦ ✦ ✦</div>
+  <div class="logo">PORTAL RPG</div>
+  <div class="logo-sub">Dungeons &amp; Dragons 5ª Edição</div>
+  <p class="tagline">Crie heróis. Narre lendas. Domine Faerûn.</p>
+</header>
+
+<main>
+
+  <div class="section-label">Módulos</div>
+  <div class="cta-grid">
+    <a class="cta-card" href="/sheet.html">
+      <span class="cta-icon">📜��</span>
+      <div class="cta-title">Fichas de Personagem</div>
+      <div class="cta-desc">Criador completo D&amp;D 5e. Classes, raças, magias por nível, contador de slots, todos os cálculos automáticos.</div>
+    </a>
+    <div class="cta-card" onclick="newCampaign()">
+      <div class="cta-badge">WATERDEEP</div>
+      <span class="cta-icon">📖��</span>
+      <div class="cta-title">Aventura Narrada</div>
+      <div class="cta-desc">Mestre IA narra sua jornada em Waterdeep. Campanha longa com arcos, NPCs, conspirações e escolhas que importam.</div>
+    </div>
+    <div class="cta-card" onclick="document.getElementById('dice-anchor').scrollIntoView({behavior:'smooth'})">
+      <span class="cta-icon">🎲��</span>
+      <div class="cta-title">Rolagem de Dados</div>
+      <div class="cta-desc">D4 ao D100. Vantagem, desvantagem e gerador de atributos 4d6 drop menor.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Fichas Salvas</div>
+  <div class="chars-grid" id="chars-grid">
+    <div class="char-card new-card" onclick="newChar()">
+      <span class="new-plus">+</span>
+      Nova Ficha
+    </div>
+  </div>
+
+  <div class="section-label">Aventuras em Andamento</div>
+  <div class="camps-list" id="camps-list">
+    <div class="empty-msg">Nenhuma aventura salva ainda.</div>
+  </div>
+
+  <div class="section-label" id="dice-anchor">Rolagem Rápida</div>
+  <div class="dice-section">
+    <div style="font-size:13px;color:var(--cream3)">Clique para rolar</div>
+    <div class="dice-row">
+      <button class="die-btn" onclick="roll(4)">d4</button>
+      <button class="die-btn" onclick="roll(6)">d6</button>
+      <button class="die-btn" onclick="roll(8)">d8</button>
+      <button class="die-btn" onclick="roll(10)">d10</button>
+      <button class="die-btn" onclick="roll(12)">d12</button>
+      <button class="die-btn" onclick="roll(20)">d20</button>
+      <button class="die-btn" onclick="roll(100)">d%</button>
+      <button class="die-btn" onclick="rollAdv()">2d20 Vantagem</button>
+      <button class="die-btn" onclick="rollDisadv()">2d20 Desvantagem</button>
+      <button class="die-btn" onclick="rollStats()">Gerar Atributos (4d6 drop)</button>
+    </div>
+    <div class="roll-result" id="roll-result"></div>
+    <div class="roll-sub"    id="roll-sub"></div>
+  </div>
+
+</main>
+
+<div id="modal"><div class="modal-box" id="modal-box"></div></div>
+<script>
+// Show user nav
+window.addEventListener("DOMContentLoaded", async () => {
+  const user = await checkAuth().catch(()=>null);
+  if (!user) return;
+  document.getElementById("user-nav").innerHTML = `
+    <a href="/profile.html" style="font-family:'Cinzel',serif;font-size:10px;color:var(--cream3);
+      letter-spacing:.06em;text-decoration:none;padding:4px 10px;
+      border:1px solid transparent;transition:all .15s"
+      onmouseover="this.style.borderColor='var(--stone-600)'"
+      onmouseout="this.style.borderColor='transparent'">
+      ⚔ ${user.displayName}
+    </a>
+    <button onclick="logout()" style="background:var(--stone-700);border:1px solid var(--stone-600);
+      color:var(--cream4);padding:4px 12px;font-family:'Cinzel',serif;font-size:9px;
+      cursor:pointer;letter-spacing:.08em;transition:all .15s"
+      onmouseover="this.style.borderColor='var(--amber-dim)';this.style.color='var(--cream)'"
+      onmouseout="this.style.borderColor='var(--stone-600)';this.style.color='var(--cream4)'">
+      Sair
+    </button>`;
+});
+</script>
+
+<script src="/public/js/portal.js"></script>
+</body>
+</html>
